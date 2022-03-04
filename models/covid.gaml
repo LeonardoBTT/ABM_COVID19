@@ -44,7 +44,7 @@ global {
 	int gamma <- 7;
 		
 	init {
-		
+				
 		create predio from: shape_file_predio with: [fid:float(read("fid"))] {
 			do personalizar_predio;
 		}

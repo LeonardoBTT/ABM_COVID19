@@ -13,6 +13,8 @@ import "../user_model.gaml"
 
 species pessoas skills:[moving] {
 	
+	//	MANUTENÇÃO
+	
     bool is_susceptible <- true;
     bool is_exposed <- false;
     bool is_infected <- false;
@@ -57,7 +59,7 @@ species pessoas skills:[moving] {
 		}
 		
 		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0);
+			do sleep(5.0 #s);
 		}
 		
 		if sleep_confirmacao {
@@ -82,7 +84,7 @@ species pessoas skills:[moving] {
 		}
 		
 		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0);
+			do sleep(5.0 #s);
 		}
 		
 		if sleep_confirmacao {
@@ -104,7 +106,7 @@ species pessoas skills:[moving] {
 		}
 		
 		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0);
+			do sleep(5.0 #s);
 		}
 		
 		if sleep_confirmacao {
@@ -137,7 +139,7 @@ species pessoas skills:[moving] {
 		
 		if alvo = location and sleep_confirmacao = false {
 			do ocupacao_cadeira(cadeira_escolhida);
-			do sleep(15 * 60.0);
+			do sleep(15 #mn);
 		}
 		
 		if sleep_confirmacao {
@@ -160,7 +162,7 @@ species pessoas skills:[moving] {
 		}
 		
 		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0);
+			do sleep(5.0 #s);
 		}
 		
 		if sleep_confirmacao {
@@ -272,7 +274,7 @@ species pessoas skills:[moving] {
 	}
 	 
 	reflex sleep when: objetivo_atual = "sleep" {
-		sleep_time <- sleep_time - 1*step;
+		sleep_time <- sleep_time - 1;
 		if sleep_time <= 0 {
 			objetivo_atual <- sleep_objetivo;
 			sleep_confirmacao <- true;
@@ -284,29 +286,39 @@ species pessoas skills:[moving] {
 //  Objetivo: 
 //*****************************************************************************
 
+//	MANUTENÇÃO
+
    	float infected_x;
    	float infected_y;
    	float infected_z;
-   	
    	int infective_minute;
    	int infective_day;
 
-	reflex s_to_i {
-		ask pessoas at_distance 1 #m {
-			if self.is_infected {
-				if flip (0.025) {
-					myself.is_infected <- true;
-					myself.is_susceptible <- false;
-					color_pessoas <- #red;
-					geometry var1 <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:27700");
-					infected_x <- var1.location.x;
-					infected_y <- var1.location.y;
-					infected_z <- var1.location.z;
-    				infective_minute <- current_date.minute_of_day;
-    				infective_day <- current_date.day_of_year;
-				}
-			}
+    int ngb_infected_number function: pessoas at_distance 1 #m count(each.is_infected);
+
+	reflex s_to_e when: is_susceptible and (time mod 60.0) = 0 {
+		if flip(1-(1-beta)^ngb_infected_number) {
+			write "tive contato com: " + ngb_infected_number;
+			write 1-(1-beta)^ngb_infected_number;
+			is_susceptible <- false;
+			is_exposed <- true;
+			color_pessoas <- #yellow;
+			
+			geometry var1 <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:27700");
+			infected_x <- var1.location.x;
+			infected_y <- var1.location.y;
+			infected_z <- var1.location.z;
+			infective_minute <- current_date.minute_of_day;
+			infective_day <- current_date.day_of_year;
 		}
+	}
+	
+	reflex e_to_i when: is_exposed {
+		
+	}
+	
+	reflex i_to_r when: is_infected {
+		
 	}
 
 //*****************************************************************************
