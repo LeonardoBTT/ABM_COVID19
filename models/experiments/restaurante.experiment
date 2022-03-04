@@ -1,0 +1,23 @@
+/**
+* Name: experiment
+* Author: Leonardo Bittencourt da Silva
+*/
+
+model restaurante
+
+import "../experiment.experiment"
+
+experiment restaurante type: gui {
+	
+	parameter "Texturas ligadas: " var: texturas <- texturas;
+	
+	output {
+		//Restaurante RU
+		display ru type: opengl background: #black {
+			species predio aspect: base;
+			species caminho aspect: base;
+			species mesas aspect: base transparency: 0.1;
+			species pessoas aspect: base transparency: 0.3;
+		}
+	}
+}

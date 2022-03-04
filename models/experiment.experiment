@@ -1,0 +1,11 @@
+/**
+* Name: experiment
+* Author: Leonardo Bittencourt da Silva
+*/
+
+model experiment_model
+
+import "covid.gaml"
+
+// Restaurante
+import "experiments/restaurante.experiment"

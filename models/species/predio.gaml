@@ -1,0 +1,87 @@
+/**
+* Name: pessoas
+* Author: Leonardo Bittencourt da Silva
+*/
+
+model predio
+
+import "../user_model.gaml"
+
+//****************************************************************************//
+//*								SPECIES PREDIO	                            *//
+//**************************************************************************//
+
+species predio {
+	
+//*****************************************************************************
+//	Action Personalizar o prédio
+//	Objetivo: Alterar configurações de exibição dos elementos visuais do prédio
+//*****************************************************************************
+
+	int fid;
+	rgb color_mesas;
+	float altura;
+
+	action personalizar_predio {
+		
+//		Filtra tudo o que NÃO for parede
+		if (fid >= 44 and fid <= 50) or (fid >= 151 and fid <= 153) {
+			
+//			Balcão (44 e 45)
+			if fid = 44 or fid = 45 {
+				color_mesas <- #red - 200;
+				altura <- 1.0;
+			}
+			
+//			Mesa dos talheres (46) e comidas (47)
+			if fid = 46 or fid = 47 {
+				color_mesas <- #red - 200;
+				altura <- 1.0;
+			}
+			
+//			Entregar dos talheres (48)
+			if fid = 48 {
+				color_mesas <- #red;
+				altura <- 0.0;
+			}
+			
+//			Entrada (49) e saída (50)
+			if fid = 49 or fid = 50 {
+				color_mesas <- #red;
+				altura <- 0.0;
+			}
+			
+//			Pontos de parada: balcão (151), mesa dos talheres (152) e comidas (153) 
+			if fid = 151 or fid = 152 or fid = 153 {
+				color_mesas <- #red;
+				altura <- 0.0;
+			}
+		
+//		  Personalização das PAREDES
+		} else {
+			color_mesas <- #grey;
+			altura <- 2.5;
+		}
+	}
+	
+//*****************************************************************************
+	
+	aspect base {
+		
+		draw shape color: color_mesas depth: altura;
+					
+		if texturas {
+			
+//			Piso
+			draw rectangle(11.8,19.5) at: {5.9,9.8,-0.1} texture: ['../includes/imgs/textura.jpg'];
+			
+//			Representação dos funcionários
+			draw obj_file("../includes/objs/people.obj", 90::{-1,0,0}) at: {7,5,0.7} rotate: 90 size: 0.5 color: #black + 100;
+			draw obj_file("../includes/objs/people.obj", 90::{-1,0,0}) at: {7,7,0.7} rotate: 90 size: 0.5 color: #black + 100;
+			draw obj_file("../includes/objs/people.obj", 90::{-1,0,0}) at: {11,16.5,0.7} rotate: 90 size: 0.5 color: #black + 100;
+			
+		} else {
+			draw rectangle(11.8,19.5) at: {5.9,9.8,-0.1} color: #white;
+		}
+	}
+}
