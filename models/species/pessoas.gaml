@@ -294,15 +294,17 @@ species pessoas skills:[moving] {
    	int infective_minute;
    	int infective_day;
 
+	
+	list testando;
+
     int ngb_infected_number function: pessoas at_distance 1 #m count(each.is_infected);
 
 	reflex s_to_e when: is_susceptible and (time mod 60.0) = 0 {
 		if flip(1-(1-beta)^ngb_infected_number) {
-			write "tive contato com: " + ngb_infected_number;
-			write 1-(1-beta)^ngb_infected_number;
 			is_susceptible <- false;
 			is_exposed <- true;
 			color_pessoas <- #yellow;
+			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
 			
 			geometry var1 <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:27700");
 			infected_x <- var1.location.x;
@@ -311,6 +313,16 @@ species pessoas skills:[moving] {
 			infective_minute <- current_date.minute_of_day;
 			infective_day <- current_date.day_of_year;
 		}
+	}
+	
+	
+	reflex jioasdjsioajd {
+		write agents_inside(self) where (each.name contains "pessoas");
+//		ask pessoas at_distance 1 #m {
+//			if self.location in myself.location{
+//				write "pojas";
+//			}
+//		}
 	}
 	
 	reflex e_to_i when: is_exposed {

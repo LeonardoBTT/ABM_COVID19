@@ -67,4 +67,5 @@ global {
 	int nb_R_students <- students_R_initial update: pessoas count (each.is_recovered);
 	
 	int nb_S_students -> n_pessoas - nb_E_students - nb_I_students - nb_R_students;
+	
 }
