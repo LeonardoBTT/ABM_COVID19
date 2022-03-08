@@ -22,12 +22,10 @@ global {
 
 	geometry shape <- envelope(shape_file_predio);
 
-	int n_pessoas <- 100;
-	point origem <- {10.67,19.29,0};
 	bool texturas <- false;
 	
 //	Definindo variáveis que controlam o tempo do modelo
-	float step <- 1 #s;
+	float step <- 60 #s;
 	date starting_date <- date("2022-01-01 06:00:00");
 		
 //	Definindo uma variável que será usada futuramente para que o agente ande sobre os caminhos
@@ -54,7 +52,14 @@ global {
 		create caminho from: shape_file_caminhos;
 		caminho_de_pedestres <- as_edge_graph(caminho);
 
-		create pessoas;
+		create pessoas number: 100;
+		
+		int aux <- 1;
+    	loop i over: pessoas {
+    		i.t1_minutos <- aux;
+    		aux <- aux + 1;
+    	}
+		
 	}
 	
 	int students_E_initial <- 0;
@@ -66,6 +71,6 @@ global {
 	int students_R_initial <- 0;
 	int nb_R_students <- students_R_initial update: pessoas count (each.is_recovered);
 	
-	int nb_S_students -> n_pessoas - nb_E_students - nb_I_students - nb_R_students;
+	int nb_S_students -> 100 - nb_E_students - nb_I_students - nb_R_students;
 	
 }

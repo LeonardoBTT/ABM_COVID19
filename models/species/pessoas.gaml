@@ -12,63 +12,125 @@ import "../user_model.gaml"
 //**************************************************************************//
 
 species pessoas skills:[moving] {
+		
+//	status 0 = inativa | status 1 = feita | status 2 = sendo feita | status 3 = pode ser iniciada
+	int t1_status; 
+	int t2_status;
+	int t3_status;
+	int t4_status;
+	int t5_status;
+	int t6_status;
+	int t7_status;
+	int t1_minutos;
+	int t2_minutos <- 1;
+	int t3_minutos <- 1;
+	int t4_minutos <- 1;
+	int t5_minutos <- 30;
+	int t6_minutos <- 1;
+	int t7_minutos <- 1;
+	int sleep_time <- -1; // auxilia o tempo que a pessoa espera
+	point t1_local <- {10.67,19.29,0.0};
+	point t2_local <- {9.90,16.90,0.0};
+	point t3_local <- {5.58,8.64,0.0};
+	point t4_local <- {5.70,5.11,0.0};
+	point t5_local;
+	point t6_local <- {5.07,2.06,0.0};
+	point t7_local <- {5.17,19.32,0.0};
 	
-	//	MANUTENÇÃO
+	point fora_1;		// fora depois do café da manhã
+	point fora_2;		// fora depois do almoço
+	point fora_3;		// fora depois do jantar
+	int fora_1_minutos;
+	int fora_2_minutos;
+	int fora_3_minutos;
 	
-    bool is_susceptible <- true;
+//	SEIR variáveis
+	bool esta_suscetivel;
+	bool esta_exposto;
+	bool esta_infectado;
+	bool esta_recuperado;
+	
+	point infectado_x;
+	point infectado_y;
+	
+	point alvo;
+	rgb color_pessoas;
+	
+    bool is_susceptible;
     bool is_exposed <- false;
     bool is_infected <- false;
     bool is_recovered <- false;
 	
-	rgb color_pessoas;
 	string objetivo_atual;
 	
     init {
-    	color_pessoas <- #green;
+    	
+    	location <- t1_local + {1,0,0};
+		t1_status <- 3;
+		speed <- 3 #km/#h;
+		color_pessoas <- #green;
+		
     	if flip (0.1) {
     		is_infected <- true;
     		color_pessoas <- #red;
     		is_susceptible <- false;
     	}
-    	speed <- 3 #km/#h;
-		objetivo_atual <- "pagar";
-		n_pessoas <- n_pessoas - 1;
-		location <- texturas ? (origem + {0,0,0.75}) : origem;
+    	
+//		location <- texturas ? (origem + {0,0,0.75}) : origem;
     }
 
 //*****************************************************************************
-//	Move
-//	Objetivo: Realiza o movimento da pessoas quando ela tem um alvo
+//	Reflex chegar ao restaurante
+//	Objetivo: posicionar a pessoa na porta do restaurante
 //*****************************************************************************
 
-	point alvo;
-
-	reflex move when: alvo != nil and alvo != location {
-		do goto target:alvo on:caminho_de_pedestres;
+	reflex chegar when: t1_status > 0 {
+		
+		if alvo = nil and location != t1_local {
+			alvo <- t1_local;
+		}
+		
+		if location = alvo {
+			alvo <- nil;
+			t1_status <- 2;
+		}
+		
+		if t1_status = 2 {
+			do esperar;
+		}
+		
+		if t1_status = 1 {
+			t1_status <- 0;
+			t2_status <- 3;
+			do escolher_atividade;
+		}
 	}
-
+	
 //*****************************************************************************
 //	Reflex PAGAR
 //	Objetivo: Realiza o pagamento do restaurante
 //*****************************************************************************
 	
-	reflex pagar when: objetivo_atual = "pagar" {
+	reflex pagar when: t2_status > 0 {
 		
-		if alvo = nil {
-			alvo <- definir_alvo(objetivo_atual, predio);
+		if alvo = nil and location != t2_local {
+			alvo <- t2_local;
 		}
 		
-		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0 #s);
-		}
-		
-		if sleep_confirmacao {
+		if location = alvo {
+			is_susceptible <- true;
 			alvo <- nil;
-			sleep_confirmacao <- false;
-			if n_pessoas > 0 {
-				create pessoas;
-			}
-			objetivo_atual <- "pegar_os_talheres";
+			t2_status <- 2;
+		}
+		
+		if t2_status = 2 {
+			do esperar;
+		}
+		
+		if t2_status = 1 {
+			t2_status <- 0;
+			t3_status <- 3;
+			do escolher_atividade;
 		}
 	}
 	
@@ -77,76 +139,87 @@ species pessoas skills:[moving] {
 //	Objetivo: Pega os talheres
 //*****************************************************************************
 
-	reflex pegar_talher when: objetivo_atual = "pegar_os_talheres" {
+	reflex pegar_talher when: t3_status > 0 {
 		
-		if alvo = nil {
-			alvo <- definir_alvo(objetivo_atual, predio);	
+		if alvo = nil and location != t3_local {
+			alvo <- t3_local;
 		}
 		
-		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0 #s);
-		}
-		
-		if sleep_confirmacao {
+		if location = alvo {
 			alvo <- nil;
-			sleep_confirmacao <- false;
-			objetivo_atual <- "se_servir";
+			t3_status <- 2;
+		}
+		
+		if t3_status = 2 {
+			do esperar;
+		}
+		
+		if t3_status = 1 {
+			t3_status <- 0;
+			t4_status <- 3;
+			do escolher_atividade;
 		}
 	}
-
+	
 //*****************************************************************************
 //	Reflex SE SERVIR
 //	Objetivo: Coloca comida no prato
 //*****************************************************************************
  
-	reflex pegar_comida when: objetivo_atual = "se_servir" {
+	reflex pegar_comida when: t4_status > 0 {
 		
-		if alvo = nil {
-			alvo <- definir_alvo(objetivo_atual, predio);	
+		if alvo = nil and location != t4_local {
+			alvo <- t4_local;
 		}
 		
-		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0 #s);
-		}
-		
-		if sleep_confirmacao {
+		if location = alvo {
 			alvo <- nil;
-			sleep_confirmacao <- false;
-			objetivo_atual <- "comer";
+			t4_status <- 2;
+		}
+		
+		if t4_status = 2 {
+			do esperar;
+		}
+		
+		if t4_status = 1 {
+			t4_status <- 0;
+			t5_status <- 3;
+			do escolher_atividade;
 		}
 	}
-	
+
 //*****************************************************************************
 //	Reflex COMER
 //	Objetivo: Escolhe uma cadeira vazia e consome a refeição
 //***************************************************************************** 
 
-	int cadeira_escolhida <- 0;
-
-	reflex comer when: objetivo_atual = "comer" {
+	reflex comer when: t5_status > 0 {
 		
-		if cadeira_escolhida = 0 {
-			cadeira_escolhida <- escolher_cadeira();
-			alvo <- definir_alvo(cadeira_escolhida, mesas);
+		if alvo = nil and location != t5_local {
+			do escolher_cadeira;
+			alvo <- t5_local;
 		}
 		
-		if cadeira_escolhida != 0 and sleep_confirmacao = false {
-			if cadeira_disponivel(cadeira_escolhida) = false {
-				alvo <- nil;
-				cadeira_escolhida <- 0;
-			}
+		if alvo != nil and location != alvo {
+			do verificar_disponibilidade;
 		}
 		
-		if alvo = location and sleep_confirmacao = false {
-			do ocupacao_cadeira(cadeira_escolhida);
-			do sleep(15 #mn);
-		}
-		
-		if sleep_confirmacao {
+		if location = alvo {
 			alvo <- nil;
-			sleep_confirmacao <- false;
-			do ocupacao_cadeira(cadeira_escolhida);
-			objetivo_atual <- "entregar_talheres";
+			t5_status <- 2;
+			do ocupar_cadeira;
+		}
+		
+		if t5_status = 2 {
+			do esperar;
+		}
+		
+		if t5_status = 1 {
+			do desocupar_cadeira;
+			t5_status <- 0;
+			t6_status <- 3;
+			do escolher_atividade;
+		
 		}
 	}
 
@@ -155,20 +228,25 @@ species pessoas skills:[moving] {
 //	Objetivo: Realiza a entrega dos talheres utilizados na refeição
 //*****************************************************************************
 
-	reflex entregar_talheres when: objetivo_atual = "entregar_talheres" {
+	reflex entregar_talheres when: t6_status > 0 {
+		
+		if alvo = nil and location != t6_local {
+			alvo <- t6_local;
+		}
 
-		if alvo = nil {
-			alvo <- definir_alvo(objetivo_atual, predio);
-		}
-		
-		if alvo = location and sleep_confirmacao = false {
-			do sleep(5.0 #s);
-		}
-		
-		if sleep_confirmacao {
+		if location = alvo {
 			alvo <- nil;
-			sleep_confirmacao <- false;
-			objetivo_atual <- "partir";
+			t6_status <- 2;
+		}
+		
+		if t6_status = 2 {
+			do esperar;
+		}
+		
+		if t6_status = 1 {
+			t6_status <- 0;
+			t7_status <- 3;
+			do escolher_atividade;
 		}
 	}
 	
@@ -177,125 +255,104 @@ species pessoas skills:[moving] {
 //	Objetivo: Vai embora do prédio e some
 //*****************************************************************************
 
-	reflex ir_embora when: objetivo_atual = "partir" {
+	reflex ir_embora when: t7_status > 0 {
 		
 		if alvo = nil {
-			alvo <- definir_alvo(objetivo_atual, predio);
+			alvo <- t7_local;
 		}
 		if alvo = location {
 			do die;
 		}
 	}
-	
+
 //*****************************************************************************
-//	Escolher cadeira
-//	Objetivo: Escolhe o número de uma cadeira vazia no local
+//	Action escolher uma atividade
+//	Objetivo: controla a escolha de uma atividade com base na sua dependência
 //*****************************************************************************
 
-	int escolher_cadeira {
-	
-		int cadeira;
-
-		cadeira <- one_of(where(mesas, each.cadeira_ocupada = false and each.tipo = "cadeira")).fid;
+	action escolher_atividade {
 		
-		return cadeira;
+		if t1_status = 1 {
+			t2_status <- 3;
+		}
+
+		if t2_status = 1 and t1_status = 1 {
+			t3_status <- 3;
+		}
+
+		if t3_status = 1 and t2_status = 1 and t1_status = 1 {
+			t4_status <- 3;
+		}
+		
+		if t4_status = 1 and t3_status = 1 and t2_status = 1 and t1_status = 1 {
+			t5_status <- 3;
+		}
+		
+		if t5_status = 1 and t4_status = 1 and t3_status = 1 and t2_status = 1 and t1_status = 1 {
+			t6_status <- 3;
+		}
+		
+		if t6_status = 1 and t5_status = 1 and t4_status = 1 and t3_status = 1 and t2_status = 1 and t1_status = 1 {
+			t7_status <- 3;
+		} 
 	}
 	
 //*****************************************************************************
-//	BOOL confirmar ocupação da cadeira
+//	Action Escolher cadeira
+//	Objetivo: Escolhe o número de uma cadeira vazia no local
+//*****************************************************************************
+
+	action escolher_cadeira {
+		t5_local <- one_of(where(mesas, each.cadeira_ocupada = false and each.tipo = "cadeira")).location;
+	}
+	
+//*****************************************************************************
+//	Action confirmar ocupação da cadeira
 //	Objetivo: Verifica se a cadeira ainda está disponível
 //*****************************************************************************
 
-	bool cadeira_disponivel(int cadeira) {
+	action verificar_disponibilidade {
 		
-		bool situacao;
-
-		ask mesas where (each.fid=cadeira) {
-			situacao <- self.cadeira_ocupada ? false : true;
+		ask mesas where (each.location=alvo) {
+			if self.cadeira_ocupada {
+				myself.alvo <- nil;
+			}
 		}
-		
-		return situacao;
 	}
 
 //*****************************************************************************
 //	Action ocupar cadeira
-//	Objetivo: Marcar a cadeira como ocupada/disponivel
+//	Objetivo: Marcar a cadeira como ocupada
 //*****************************************************************************
 
-	action ocupacao_cadeira (int cadeira) {
-		ask mesas where (each.fid=cadeira) {
-			cadeira_ocupada <- cadeira_ocupada ? false : true;
+	action ocupar_cadeira {
+		ask mesas where (each.location=alvo) {
+			cadeira_ocupada <- true;
 		}
 	}
-		
-//*****************************************************************************
-//	Define um ALVO (point)
-//  Objetivo: definir um ponto com base na coleção escolhida
-//*****************************************************************************
-
-    point definir_alvo (unknown obj, container colecao_escolhida) {
-    	
-    	int id_obj;
-     	geometry geometria_alvo;    	
-    	point ponto_alvo;
-    	point ajuste_altura;
-    	
-    	switch colecao_escolhida {
-    		match predio {
-    			id_obj <- objetivos_nome index_of string(obj);
-    			id_obj <- objetivos_objetos_predio[id_obj];
-    			geometria_alvo <- one_of(predio where (each.fid=id_obj));
-    		}
-    		match mesas {
-    			id_obj <- int(obj);
-    			geometria_alvo <- one_of(mesas where (each.fid=id_obj));
-    		}
-    	}
-		
-	 	ajuste_altura <- texturas ? {0,0,0.75} : {0,0,0};	
-		ponto_alvo <- geometria_alvo.location + ajuste_altura;
-
-    	return ponto_alvo;
-	}
 
 //*****************************************************************************
-//	Controle do sleep
-//  Objetivo: fazer a pessoa esperar um determinado tempo (parada)
+//	Action desocupar cadeira
+//	Objetivo: Marcar a cadeira como disponivel
 //*****************************************************************************
 
-	float sleep_time <- 0.0;
-	string sleep_objetivo <- nil;
-	bool sleep_confirmacao <- false;
-
-	action sleep(float tempo) {
-		sleep_time <- tempo;
-		sleep_objetivo <- objetivo_atual;
-		objetivo_atual <- "sleep";
-	}
-	 
-	reflex sleep when: objetivo_atual = "sleep" {
-		sleep_time <- sleep_time - 1;
-		if sleep_time <= 0 {
-			objetivo_atual <- sleep_objetivo;
-			sleep_confirmacao <- true;
+	action desocupar_cadeira {
+		ask mesas where (each.location=alvo) {
+			cadeira_ocupada <- false;
 		}
 	}
-	
+			
+
+//   	float infected_x;
+//   	float infected_y;
+//   	float infected_z;
+//   	int infective_minute;
+//   	int infective_day;
+
 //*****************************************************************************
-//	
-//  Objetivo: 
+//	Reflex suscetivel para exposto
+//	Objetivo: mudar o estado da pessoa para exposto
 //*****************************************************************************
-
-//	MANUTENÇÃO
-
-   	float infected_x;
-   	float infected_y;
-   	float infected_z;
-   	int infective_minute;
-   	int infective_day;
-
-	
-	list testando;
 
     int ngb_infected_number function: pessoas at_distance 1 #m count(each.is_infected);
 
@@ -305,26 +362,30 @@ species pessoas skills:[moving] {
 			is_exposed <- true;
 			color_pessoas <- #yellow;
 			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
-			
-			geometry var1 <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:27700");
-			infected_x <- var1.location.x;
-			infected_y <- var1.location.y;
-			infected_z <- var1.location.z;
-			infective_minute <- current_date.minute_of_day;
-			infective_day <- current_date.day_of_year;
+//			geometry var1 <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:27700");
+//			infected_x <- var1.location.x;
+//			infected_y <- var1.location.y;
+//			infected_z <- var1.location.z;
+//			infective_minute <- current_date.minute_of_day;
+//			infective_day <- current_date.day_of_year;
 		}
 	}
 	
-	
-	reflex jioasdjsioajd {
-		write agents_inside(self) where (each.name contains "pessoas");
+
+//*****************************************************************************
+//	Reflex colisao com pessoas
+//	Objetivo: identificar outras pessoas e criar colisões
+//*****************************************************************************
+
+//	reflex colisao_com_pessoas {
+//		write agents_inside(self) where (each.name contains "pessoas");
 //		ask pessoas at_distance 1 #m {
 //			if self.location in myself.location{
 //				write "pojas";
 //			}
 //		}
-	}
-	
+//	}
+
 	reflex e_to_i when: is_exposed {
 		
 	}
@@ -333,6 +394,123 @@ species pessoas skills:[moving] {
 		
 	}
 
+	
+//*****************************************************************************
+//	Move
+//	Objetivo: Realiza o movimento da pessoas quando ela tem um alvo
+//*****************************************************************************
+	
+	reflex move when: alvo != nil {
+		
+		do goto target:alvo on:caminho_de_pedestres;
+	
+	}
+	
+//*****************************************************************************
+//	Esperar
+//	Objetivo: a pessoa espera um determinado tempo quando chega no seu alvo 
+//*****************************************************************************
+
+	action esperar {
+		if t1_status = 2 {
+			if sleep_time = -1 {
+				sleep_time <- t1_minutos;
+			}
+			if sleep_time > -1 {
+				if sleep_time = 0 {
+					t1_status <- 1;
+					sleep_time <- sleep_time - 1;
+				} else {
+					sleep_time <- sleep_time - 1;	
+				}
+			}
+		}
+
+		if t2_status = 2 {
+			if sleep_time = -1 {
+				sleep_time <- t2_minutos;
+			}
+			if sleep_time > -1 {
+				if sleep_time = 0 {
+					t2_status <- 1;
+					sleep_time <- sleep_time - 1;
+				} else {
+					sleep_time <- sleep_time - 1;	
+				}
+			}
+		}
+		
+		if t3_status = 2 {
+			if sleep_time = -1 {
+				sleep_time <- t3_minutos;
+			}
+			if sleep_time > -1 {
+				if sleep_time = 0 {
+					t3_status <- 1;
+					sleep_time <- sleep_time - 1;
+				} else {
+					sleep_time <- sleep_time - 1;	
+				}
+			}
+		}
+					
+		if t4_status = 2 {
+			if sleep_time = -1 {
+				sleep_time <- t4_minutos;
+			}
+			if sleep_time > -1 {
+				if sleep_time = 0 {
+					t4_status <- 1;
+					sleep_time <- sleep_time - 1;
+				} else {
+					sleep_time <- sleep_time - 1;	
+				}
+			}
+		}
+		
+		if t5_status = 2 {
+			if sleep_time = -1 {
+				sleep_time <- t5_minutos;
+			}
+			if sleep_time > -1 {
+				if sleep_time = 0 {
+					t5_status <- 1;
+					sleep_time <- sleep_time - 1;
+				} else {
+					sleep_time <- sleep_time - 1;	
+				}
+			}
+		}
+					
+		if t6_status = 2 {
+			if sleep_time = -1 {
+				sleep_time <- t6_minutos;
+			}
+			if sleep_time > -1 {
+				if sleep_time = 0 {
+					t6_status <- 1;
+					sleep_time <- sleep_time - 1;
+				} else {
+					sleep_time <- sleep_time - 1;	
+				}
+			}
+		}
+								
+		if t7_status = 2 {
+			if sleep_time = -1 {
+				sleep_time <- t7_minutos;
+			}
+			if sleep_time > -1 {
+				if sleep_time = 0 {
+					t7_status <- 1;
+					sleep_time <- sleep_time - 1;
+				} else {
+					sleep_time <- sleep_time - 1;	
+				}
+			}
+		}
+	}
+		
 //*****************************************************************************
 
     aspect base {
