@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Experiment_plan>
+	<Simulation id="2" sourcePath="restaurante.experiment" finalStep="50" experiment="restaurante" seed="3">
+	  <Outputs>
+	    <Output id="1" name="ru" framerate="5" />
+	  </Outputs>
+	</Simulation>
+</Experiment_plan>
