@@ -21,7 +21,74 @@ species predio {
 	int fid;
 	rgb color_mesas;
 	float altura;
+	bool disponivel;
+	
+	int hora_inicio_cafe <- 6;
+	int minuto_inicio_cafe <- 30;
+	int hora_fim_cafe <- 8;
+	int minuto_fim_cafe <- 0;
+	
+	int hora_inicio_almoco <- 11;
+	int minuto_inicio_almoco <- 0;
+	int hora_fim_almoco <- 13;
+	int minuto_fim_almoco <- 15;
+	
+	int hora_inicio_jantar <- 17;
+	int minuto_inicio_jantar <- 0;
+	int hora_fim_jantar <- 19;
+	int minuto_fim_jantar <- 30;
+	
+	reflex abrir_e_fechar {
+//		Café
+		if current_date.hour = hora_inicio_cafe and current_date.minute = minuto_inicio_cafe {
+			write "Hora do café";
+			disponivel <- true;
+			ask pessoas {
+				self.t1_status <- 3;
+			}
+		}
+		if current_date.hour = hora_fim_cafe and current_date.minute = minuto_fim_cafe {
+			disponivel <- false;
+			write "Fim da hora do café";
+		}
 
+//		Almoço		
+		if current_date.hour = hora_inicio_almoco and current_date.minute = minuto_inicio_almoco {
+			write "Hora do almoço";
+			disponivel <- true;
+			ask pessoas {
+				self.t1_status <- 3;
+			}
+		}
+		if current_date.hour = hora_fim_almoco and current_date.minute = minuto_fim_almoco {
+			write "Fim da hora do almoço";
+			disponivel <- false;
+		}
+
+//		Jantar
+		if current_date.hour = hora_inicio_jantar and current_date.minute = minuto_inicio_jantar {
+			write "Hora da janta";
+			disponivel <- true;
+			ask pessoas {
+				self.t1_status <- 3;
+			}
+		}
+		if current_date.hour = hora_fim_jantar and current_date.minute = minuto_fim_jantar {
+			write "Fim da hora do almoço";
+			disponivel <- false;
+		}
+	}
+	
+	reflex permitir_entrada when: disponivel {
+		try {
+			ask one_of(pessoas where (each.location={10.67,19.29,0.0})){
+				if pessoas count (each.inativo=false) < 100 {
+					self.t1_status <- 1;
+				}
+			}
+		}
+	}
+	
 	action personalizar_predio {
 		
 //		Filtra tudo o que NÃO for parede
@@ -32,7 +99,7 @@ species predio {
 				color_mesas <- #red - 200;
 				altura <- 1.0;
 			}
-			
+						
 //			Mesa dos talheres (46) e comidas (47)
 			if fid = 46 or fid = 47 {
 				color_mesas <- #red - 200;

@@ -13,7 +13,7 @@ import "../user_model.gaml"
 
 species pessoas skills:[moving] {
 		
-//	status 0 = inativa | status 1 = feita | status 2 = sendo feita | status 3 = pode ser iniciada
+//	status 0 = atividade já realizada | status 1 = concluída | status 2 = sendo realizada| status 3 = pode ser iniciada
 	int t1_status; 
 	int t2_status;
 	int t3_status;
@@ -37,9 +37,8 @@ species pessoas skills:[moving] {
 	point t6_local <- {5.07,2.06,0.0};
 	point t7_local <- {5.17,19.32,0.0};
 	
-	point fora_1;		// fora depois do café da manhã
-	point fora_2;		// fora depois do almoço
-	point fora_3;		// fora depois do jantar
+	point fora_do_local <- {5.30,19.32,0.0};	// fora depois do café da manhã
+	bool inativo;
 	int fora_1_minutos;
 	int fora_2_minutos;
 	int fora_3_minutos;
@@ -60,15 +59,17 @@ species pessoas skills:[moving] {
     bool is_exposed <- false;
     bool is_infected <- false;
     bool is_recovered <- false;
+    int exposed_minutes;
+    int infected_minutes;
 	
 	string objetivo_atual;
 	
     init {
     	
-    	location <- t1_local + {1,0,0};
-		t1_status <- 3;
+		inativo <- true;
 		speed <- 3 #km/#h;
 		color_pessoas <- #green;
+    	location <- t1_local + {1,0,0};
 		
     	if flip (0.1) {
     		is_infected <- true;
@@ -92,16 +93,10 @@ species pessoas skills:[moving] {
 		
 		if location = alvo {
 			alvo <- nil;
-			t1_status <- 2;
-		}
-		
-		if t1_status = 2 {
-			do esperar;
 		}
 		
 		if t1_status = 1 {
-			t1_status <- 0;
-			t2_status <- 3;
+			inativo <- false;
 			do escolher_atividade;
 		}
 	}
@@ -128,17 +123,15 @@ species pessoas skills:[moving] {
 		}
 		
 		if t2_status = 1 {
-			t2_status <- 0;
-			t3_status <- 3;
 			do escolher_atividade;
 		}
 	}
 	
 //*****************************************************************************
 //	Reflex PEGAR OS TALHERES
-//	Objetivo: Pega os talheres
 //*****************************************************************************
 
+//	Objetivo: Pega os talheres
 	reflex pegar_talher when: t3_status > 0 {
 		
 		if alvo = nil and location != t3_local {
@@ -149,14 +142,12 @@ species pessoas skills:[moving] {
 			alvo <- nil;
 			t3_status <- 2;
 		}
-		
+			
 		if t3_status = 2 {
 			do esperar;
 		}
 		
 		if t3_status = 1 {
-			t3_status <- 0;
-			t4_status <- 3;
 			do escolher_atividade;
 		}
 	}
@@ -182,8 +173,6 @@ species pessoas skills:[moving] {
 		}
 		
 		if t4_status = 1 {
-			t4_status <- 0;
-			t5_status <- 3;
 			do escolher_atividade;
 		}
 	}
@@ -200,14 +189,14 @@ species pessoas skills:[moving] {
 			alvo <- t5_local;
 		}
 		
-		if alvo != nil and location != alvo {
+		if alvo != nil {
 			do verificar_disponibilidade;
 		}
 		
 		if location = alvo {
 			alvo <- nil;
-			t5_status <- 2;
 			do ocupar_cadeira;
+			t5_status <- 2;
 		}
 		
 		if t5_status = 2 {
@@ -215,11 +204,7 @@ species pessoas skills:[moving] {
 		}
 		
 		if t5_status = 1 {
-			do desocupar_cadeira;
-			t5_status <- 0;
-			t6_status <- 3;
 			do escolher_atividade;
-		
 		}
 	}
 
@@ -244,8 +229,6 @@ species pessoas skills:[moving] {
 		}
 		
 		if t6_status = 1 {
-			t6_status <- 0;
-			t7_status <- 3;
 			do escolher_atividade;
 		}
 	}
@@ -260,8 +243,10 @@ species pessoas skills:[moving] {
 		if alvo = nil {
 			alvo <- t7_local;
 		}
+		
 		if alvo = location {
-			do die;
+			alvo <- fora_do_local;
+			inativo <- true;
 		}
 	}
 
@@ -273,26 +258,32 @@ species pessoas skills:[moving] {
 	action escolher_atividade {
 		
 		if t1_status = 1 {
+			t1_status <- 0;
 			t2_status <- 3;
 		}
 
-		if t2_status = 1 and t1_status = 1 {
+		if t2_status = 1 and t1_status = 0 {
+			t2_status <- 0;
 			t3_status <- 3;
 		}
 
-		if t3_status = 1 and t2_status = 1 and t1_status = 1 {
+		if t3_status = 1 and t2_status = 0 and t1_status = 0 {
+			t3_status <- 0;
 			t4_status <- 3;
 		}
 		
-		if t4_status = 1 and t3_status = 1 and t2_status = 1 and t1_status = 1 {
+		if t4_status = 1 and t3_status = 0 and t2_status = 0 and t1_status = 0 {
+			t4_status <- 0;
 			t5_status <- 3;
 		}
 		
-		if t5_status = 1 and t4_status = 1 and t3_status = 1 and t2_status = 1 and t1_status = 1 {
+		if t5_status = 1 and t4_status = 0 and t3_status = 0 and t2_status = 0 and t1_status = 0 {
+			t5_status <- 0;
 			t6_status <- 3;
 		}
 		
-		if t6_status = 1 and t5_status = 1 and t4_status = 1 and t3_status = 1 and t2_status = 1 and t1_status = 1 {
+		if t6_status = 1 and t5_status = 0 and t4_status = 0 and t3_status = 0 and t2_status = 0 and t1_status = 0 {
+			t6_status <- 0;
 			t7_status <- 3;
 		} 
 	}
@@ -341,13 +332,6 @@ species pessoas skills:[moving] {
 			cadeira_ocupada <- false;
 		}
 	}
-			
-
-//   	float infected_x;
-//   	float infected_y;
-//   	float infected_z;
-//   	int infective_minute;
-//   	int infective_day;
 
 //*****************************************************************************
 //	Reflex suscetivel para exposto
@@ -356,42 +340,31 @@ species pessoas skills:[moving] {
 
     int ngb_infected_number function: pessoas at_distance 1 #m count(each.is_infected);
 
-	reflex s_to_e when: is_susceptible and (time mod 60.0) = 0 {
+	reflex s_to_e when: is_susceptible and (time mod 60.0) = 0 and !(inativo) {
 		if flip(1-(1-beta)^ngb_infected_number) {
 			is_susceptible <- false;
 			is_exposed <- true;
 			color_pessoas <- #yellow;
 			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
-//			geometry var1 <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:27700");
-//			infected_x <- var1.location.x;
-//			infected_y <- var1.location.y;
-//			infected_z <- var1.location.z;
-//			infective_minute <- current_date.minute_of_day;
-//			infective_day <- current_date.day_of_year;
+		}
+	}
+
+	reflex e_to_i when: is_exposed {
+		exposed_minutes <- exposed_minutes + 1;
+		if exposed_minutes = sigma/(exposed_minutes/(24*60)) {
+			exposed_minutes <- 0;
+			is_exposed <- false;
+			is_infected <- true;
 		}
 	}
 	
-
-//*****************************************************************************
-//	Reflex colisao com pessoas
-//	Objetivo: identificar outras pessoas e criar colisões
-//*****************************************************************************
-
-//	reflex colisao_com_pessoas {
-//		write agents_inside(self) where (each.name contains "pessoas");
-//		ask pessoas at_distance 1 #m {
-//			if self.location in myself.location{
-//				write "pojas";
-//			}
-//		}
-//	}
-
-	reflex e_to_i when: is_exposed {
-		
-	}
-	
 	reflex i_to_r when: is_infected {
-		
+		infected_minutes <- infected_minutes + 1;
+		if infected_minutes = gamma/(infected_minutes/(24*60)) {
+			infected_minutes <- 0;
+			is_infected <- false;
+			is_recovered <- true;
+		}
 	}
 
 	
@@ -421,7 +394,7 @@ species pessoas skills:[moving] {
 					t1_status <- 1;
 					sleep_time <- sleep_time - 1;
 				} else {
-					sleep_time <- sleep_time - 1;	
+					sleep_time <- sleep_time - 1;
 				}
 			}
 		}
@@ -516,7 +489,9 @@ species pessoas skills:[moving] {
     aspect base {
 		if texturas {
 			draw obj_file("../includes/objs/people.obj", 90::{-1,0,0}) size: 0.5 color: color_pessoas;
-		} else {
+		} 
+		
+		if !(inativo) {
 			draw circle(0.25) color: color_pessoas depth: 1.75;
 		}
 	}

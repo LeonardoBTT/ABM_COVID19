@@ -12,12 +12,23 @@ experiment restaurante type: gui {
 	parameter "Texturas ligadas: " var: texturas <- texturas;
 	
 	output {
+		
+		layout #split;
+		
 		//Restaurante RU
 		display ru type: opengl background: #black {
 			species predio aspect: base;
 			species caminho aspect: base;
 			species mesas aspect: base transparency: 0.1;
 			species pessoas aspect: base transparency: 0.3;
+		}
+		
+		display chart refresh: every(10#cycles) {
+			chart "Situação" type: series background: #lightgray style: exploded {
+				data "suscetiveis" value: pessoas count (each.is_susceptible) color: #green;
+				data "infectados" value: pessoas count (each.is_infected) color: #red;
+				data "recuperados" value: pessoas count (each.is_recovered) color: #blue;
+			}
 		}
 	}
 }

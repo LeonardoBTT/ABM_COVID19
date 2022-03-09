@@ -26,16 +26,11 @@ global {
 	
 //	Definindo variáveis que controlam o tempo do modelo
 	float step <- 60 #s;
-	date starting_date <- date("2022-01-01 06:00:00");
+	date starting_date <- date("2022-01-01 05:30:00");
 		
 //	Definindo uma variável que será usada futuramente para que o agente ande sobre os caminhos
 	graph caminho_de_pedestres;
-	
-//	Lista dos objetivos dentro do restaurante, tempos individuais e fid de cada objeto (para que o agente identifique a localização)
-	list<string> objetivos_nome <- 	["pagar","pegar_os_talheres","se_servir","comer","entregar_talheres","partir"];
-	list<float> objetivos_tempos <- [5.0,5.0,5.0,5.0,5.0,5.0];
-	list<int> objetivos_objetos_predio <- [151,152,153,0,48,50];
-	
+
 //	Parâmetro epidemiológico: beta = prob. infecção | sigma = dias de incubação | gamma = dias para se recuperar 
 	float beta <- 0.025;
 	int sigma <- 5;
@@ -52,25 +47,6 @@ global {
 		create caminho from: shape_file_caminhos;
 		caminho_de_pedestres <- as_edge_graph(caminho);
 
-		create pessoas number: 100;
-		
-		int aux <- 1;
-    	loop i over: pessoas {
-    		i.t1_minutos <- aux;
-    		aux <- aux + 1;
-    	}
-		
+		create pessoas number: 100;		
 	}
-	
-	int students_E_initial <- 0;
-	int nb_E_students <- students_E_initial update: pessoas count (each.is_exposed);
-	
-	int students_I_initial <- 2;
-	int nb_I_students <- students_I_initial update: pessoas count (each.is_infected ); 
-		
-	int students_R_initial <- 0;
-	int nb_R_students <- students_R_initial update: pessoas count (each.is_recovered);
-	
-	int nb_S_students -> 100 - nb_E_students - nb_I_students - nb_R_students;
-	
 }
