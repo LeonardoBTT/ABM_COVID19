@@ -31,6 +31,7 @@ species pessoas skills:[moving] {
 	int sleep_time <- -1;						// auxilia o tempo que a pessoa espera
 	point t1_local <- {10.67,19.29,0.0};
 	point t2_local <- {9.90,16.90,0.0};
+
 	point t3_local <- {5.58,8.64,0.0};
 	point t4_local <- {5.70,5.11,0.0};
 	point t5_local;
@@ -61,6 +62,11 @@ species pessoas skills:[moving] {
     bool is_recovered <- false;
     int exposed_minutes;
     int infected_minutes;
+    
+    bool sintomatico;
+    bool isolamento;
+    bool quarentena;
+    int isolamento_minutes;
 	
 	string objetivo_atual;
 	
@@ -70,27 +76,31 @@ species pessoas skills:[moving] {
 		speed <- 3 #km/#h;
 		color_pessoas <- #green;
     	location <- t1_local + {1,0,0};
+    	
+    	if flip(prob_vacinado) {
+    		beta <- beta * protecao_vacina;
+    	}
+    	
+    	if flip(prob_sintomatico) {
+    		sintomatico <- true;
+    	}
 		
-    	if flip (0.1) {
+    	if flip(prob_iniciar_infectado) {
     		is_infected <- true;
-    		color_pessoas <- #red;
+    		sintomatico <- false;
     		is_susceptible <- false;
+    		color_pessoas <- #red;
     	}
     	
 //		location <- texturas ? (origem + {0,0,0.75}) : origem;
     }
-
-	reflex saiodsajiod {
-//		write t1_status;
-	}
-
 
 //*****************************************************************************
 //	Reflex chegar ao restaurante
 //	Objetivo: posicionar a pessoa na porta do restaurante
 //*****************************************************************************
 
-	reflex chegar when: t1_status > 0 {
+	reflex chegar when: t1_status > 0 and !(isolamento){
 		
 		if alvo = nil and location != t1_local {
 			alvo <- t1_local;
@@ -133,9 +143,9 @@ species pessoas skills:[moving] {
 	
 //*****************************************************************************
 //	Reflex PEGAR OS TALHERES
+//	Objetivo: Pega os talheres
 //*****************************************************************************
 
-//	Objetivo: Pega os talheres
 	reflex pegar_talher when: t3_status > 0 {
 		
 		if alvo = nil and location != t3_local {
@@ -275,7 +285,7 @@ species pessoas skills:[moving] {
 			t3_status <- 0;
 			t4_status <- 3;
 		}
-		
+	
 		if t4_status = 1 and t3_status = 0 and t2_status = 0 and t1_status = 0 {
 			t4_status <- 0;
 			t5_status <- 3;
@@ -356,10 +366,42 @@ species pessoas skills:[moving] {
 	reflex e_to_i when: is_exposed {
 		exposed_minutes <- exposed_minutes + 1;
 		if int(sigma/(exposed_minutes/(24*60))) = 1 {
-			exposed_minutes <- 0;
-			is_exposed <- false;
-			is_infected <- true;
-			color_pessoas <- #red;
+			if flip(prob_sintomatico) {
+				exposed_minutes <- 0;
+				is_exposed <- false;
+				is_infected <- true;
+				color_pessoas <- #red;	
+			} else {
+				isolamento <- true;
+			}
+		}
+	}
+
+	reflex isolado when: isolamento {
+		isolamento_minutes <- isolamento_minutes + 1;
+		if int(dias_isolado/(isolamento_minutes/(24*60))) = 1 {
+
+			isolamento_minutes <- 0;
+
+			if flip(prob_quarentena) and !(quarentena) {
+				write "entrei em quartena";
+				quarentena <- true;
+				dias_isolado <- dias_quarentena;
+			} else {
+				isolamento <- false;
+				is_infected <- false;
+				is_susceptible <- true;
+				color_pessoas <- #green;
+			}
+
+//			Arruma quantidade de dias fixos de 20
+			if quarentena {
+				dias_isolado <- 20;
+				isolamento <- false;
+				is_infected <- false;
+				is_susceptible <- true;
+				color_pessoas <- #green;
+			}
 		}
 	}
 	
@@ -473,7 +515,7 @@ species pessoas skills:[moving] {
 				}
 			}
 		}
-								
+
 		if t7_status = 2 {
 			if sleep_time = -1 {
 				sleep_time <- t7_minutos;

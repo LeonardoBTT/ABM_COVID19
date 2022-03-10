@@ -33,8 +33,16 @@ global {
 
 //	Parâmetro epidemiológico: beta = prob. infecção | sigma = dias de incubação | gamma = dias para se recuperar 
 	float beta <- 0.025;
+	bool vacinado; 							// NÃO IMPLEMENTADA
+	float protecao_vacina <- 1.0;
+	float prob_vacinado;
 	int sigma <- 5;
+	float prob_iniciar_infectado <- 0.1;
 	int gamma <- 7;
+	int dias_isolado <- 10;
+	float prob_sintomatico <- 0.8;
+	float prob_quarentena <- 0.5;
+	int dias_quarentena <- 40;
 		
 	init {
 				

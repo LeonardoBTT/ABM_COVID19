@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Simulation id="2" >
+	<Step id='0' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-0.png</Variable>
+	</Step>
+	<Step id='1' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='2' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='3' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='4' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='5' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-5.png</Variable>
+	</Step>
+	<Step id='6' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='7' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='8' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='9' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='10' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-10.png</Variable>
+	</Step>
+	<Step id='11' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='12' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='13' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='14' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='15' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-15.png</Variable>
+	</Step>
+	<Step id='16' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='17' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='18' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='19' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='20' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-20.png</Variable>
+	</Step>
+	<Step id='21' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='22' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='23' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='24' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='25' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-25.png</Variable>
+	</Step>
+	<Step id='26' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='27' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='28' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='29' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='30' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-30.png</Variable>
+	</Step>
+	<Step id='31' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='32' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='33' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='34' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='35' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-35.png</Variable>
+	</Step>
+	<Step id='36' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='37' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='38' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='39' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='40' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-40.png</Variable>
+	</Step>
+	<Step id='41' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='42' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='43' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='44' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='45' >
+		<Variable name='ru' type='DISPLAY2D'>ru2-45.png</Variable>
+	</Step>
+	<Step id='46' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='47' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='48' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+	<Step id='49' >
+		<Variable name='ru' type='DISPLAY2D'>NA</Variable>
+	</Step>
+</Simulation>
