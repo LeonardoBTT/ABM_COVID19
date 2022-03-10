@@ -28,7 +28,7 @@ species pessoas skills:[moving] {
 	int t5_minutos <- 30;
 	int t6_minutos <- 1;
 	int t7_minutos <- 1;
-	int sleep_time <- -1; // auxilia o tempo que a pessoa espera
+	int sleep_time <- -1;						// auxilia o tempo que a pessoa espera
 	point t1_local <- {10.67,19.29,0.0};
 	point t2_local <- {9.90,16.90,0.0};
 	point t3_local <- {5.58,8.64,0.0};
@@ -55,7 +55,7 @@ species pessoas skills:[moving] {
 	point alvo;
 	rgb color_pessoas;
 	
-    bool is_susceptible;
+    bool is_susceptible <- true;
     bool is_exposed <- false;
     bool is_infected <- false;
     bool is_recovered <- false;
@@ -79,6 +79,11 @@ species pessoas skills:[moving] {
     	
 //		location <- texturas ? (origem + {0,0,0.75}) : origem;
     }
+
+	reflex saiodsajiod {
+//		write t1_status;
+	}
+
 
 //*****************************************************************************
 //	Reflex chegar ao restaurante
@@ -113,7 +118,6 @@ species pessoas skills:[moving] {
 		}
 		
 		if location = alvo {
-			is_susceptible <- true;
 			alvo <- nil;
 			t2_status <- 2;
 		}
@@ -245,7 +249,7 @@ species pessoas skills:[moving] {
 		}
 		
 		if alvo = location {
-			alvo <- fora_do_local;
+			alvo <- nil;
 			inativo <- true;
 		}
 	}
@@ -351,23 +355,24 @@ species pessoas skills:[moving] {
 
 	reflex e_to_i when: is_exposed {
 		exposed_minutes <- exposed_minutes + 1;
-		if exposed_minutes = sigma/(exposed_minutes/(24*60)) {
+		if int(sigma/(exposed_minutes/(24*60))) = 1 {
 			exposed_minutes <- 0;
 			is_exposed <- false;
 			is_infected <- true;
+			color_pessoas <- #red;
 		}
 	}
 	
 	reflex i_to_r when: is_infected {
 		infected_minutes <- infected_minutes + 1;
-		if infected_minutes = gamma/(infected_minutes/(24*60)) {
+		if int(gamma/(infected_minutes/(24*60))) = 1 {
 			infected_minutes <- 0;
 			is_infected <- false;
-			is_recovered <- true;
+			is_susceptible <- true;
+			color_pessoas <- #green;
 		}
 	}
 
-	
 //*****************************************************************************
 //	Move
 //	Objetivo: Realiza o movimento da pessoas quando ela tem um alvo
@@ -483,7 +488,7 @@ species pessoas skills:[moving] {
 			}
 		}
 	}
-		
+
 //*****************************************************************************
 
     aspect base {

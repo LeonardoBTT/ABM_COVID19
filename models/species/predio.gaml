@@ -41,7 +41,7 @@ species predio {
 	reflex abrir_e_fechar {
 //		Café
 		if current_date.hour = hora_inicio_cafe and current_date.minute = minuto_inicio_cafe {
-			write "Hora do café";
+//			write "Hora do café";
 			disponivel <- true;
 			ask pessoas {
 				self.t1_status <- 3;
@@ -49,32 +49,32 @@ species predio {
 		}
 		if current_date.hour = hora_fim_cafe and current_date.minute = minuto_fim_cafe {
 			disponivel <- false;
-			write "Fim da hora do café";
+//			write "Fim da hora do café";
 		}
 
 //		Almoço		
 		if current_date.hour = hora_inicio_almoco and current_date.minute = minuto_inicio_almoco {
-			write "Hora do almoço";
+//			write "Hora do almoço";
 			disponivel <- true;
 			ask pessoas {
 				self.t1_status <- 3;
 			}
 		}
 		if current_date.hour = hora_fim_almoco and current_date.minute = minuto_fim_almoco {
-			write "Fim da hora do almoço";
+//			write "Fim da hora do almoço";
 			disponivel <- false;
 		}
 
 //		Jantar
 		if current_date.hour = hora_inicio_jantar and current_date.minute = minuto_inicio_jantar {
-			write "Hora da janta";
+//			write "Hora da janta";
 			disponivel <- true;
 			ask pessoas {
 				self.t1_status <- 3;
 			}
 		}
 		if current_date.hour = hora_fim_jantar and current_date.minute = minuto_fim_jantar {
-			write "Fim da hora do almoço";
+//			write "Fim da hora do almoço";
 			disponivel <- false;
 		}
 	}

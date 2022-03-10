@@ -2,8 +2,8 @@
 * Name: covid
 * Based on the internal empty template. 
 * Author: Leonardo Bittencourt da Silva
-* Tags: covid, sir, 
-*/
+* Tags: covid, sir
+**/
 
 model covid
 
@@ -15,7 +15,7 @@ import "experiment.experiment"
 //**************************************************************************//
 
 global {
-	
+
 	file shape_file_predio <- file("../includes/shapes/predio.shp");
 	file shape_file_mesas <- file("../includes/shapes/mesas.shp");
 	file shape_file_caminhos <- file("../includes/shapes/caminho.shp");
@@ -23,11 +23,11 @@ global {
 	geometry shape <- envelope(shape_file_predio);
 
 	bool texturas <- false;
-	
+
 //	Definindo variáveis que controlam o tempo do modelo
-	float step <- 60 #s;
+	float step <- 1 #h;
 	date starting_date <- date("2022-01-01 05:30:00");
-		
+
 //	Definindo uma variável que será usada futuramente para que o agente ande sobre os caminhos
 	graph caminho_de_pedestres;
 
