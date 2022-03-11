@@ -25,9 +25,9 @@ experiment restaurante type: gui {
 		
 		display chart refresh: every(10#cycles) {
 			chart "Situação" type: series background: #lightgray style: exploded {
-				data "suscetiveis" value: pessoas count (each.is_susceptible) color: #green;
-				data "expostos" value: pessoas count (each.is_exposed) color: #yellow;
-				data "infectados" value: pessoas count (each.is_infected) color: #red;
+				data "suscetiveis" value: pessoas count (each.esta_suscetivel) color: #green;
+				data "expostos" value: pessoas count (each.esta_exposto) color: #yellow;
+				data "infectados" value: pessoas count (each.esta_infectado) color: #red;
 			}
 		}
 	}

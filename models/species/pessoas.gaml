@@ -14,14 +14,14 @@ import "../user_model.gaml"
 species pessoas skills:[moving] {
 		
 //	status 0 = atividade já realizada | status 1 = concluída | status 2 = sendo realizada| status 3 = pode ser iniciada
-	int t1_status; 
-	int t2_status;
-	int t3_status;
-	int t4_status;
-	int t5_status;
-	int t6_status;
-	int t7_status;
-	int t1_minutos;
+	int t1_status <- 0; 
+	int t2_status <- 0;
+	int t3_status <- 0;
+	int t4_status <- 0;
+	int t5_status <- 0;
+	int t6_status <- 0;
+	int t7_status <- 0;
+	int t1_minutos <- 0;
 	int t2_minutos <- 1;
 	int t3_minutos <- 1;
 	int t4_minutos <- 1;
@@ -40,55 +40,53 @@ species pessoas skills:[moving] {
 	
 	point fora_do_local <- {5.30,19.32,0.0};	// fora depois do café da manhã
 	bool inativo;
-	int fora_1_minutos;
-	int fora_2_minutos;
-	int fora_3_minutos;
 	
-//	SEIR variáveis
-	bool esta_suscetivel;
-	bool esta_exposto;
-	bool esta_infectado;
-	bool esta_recuperado;
+//	SEIR
+	bool esta_suscetivel <- true;
+	bool esta_vacinado;
 	
+	bool esta_exposto <- false;
+    int exposto_minutos <- 0;
+	
+	bool esta_infectado <- false;
+    bool sintomatico;
+    bool assintomatico;
 	point infectado_x;
 	point infectado_y;
-	
-	point alvo;
-	rgb color_pessoas;
-	
-    bool is_susceptible <- true;
-    bool is_exposed <- false;
-    bool is_infected <- false;
-    bool is_recovered <- false;
-    int exposed_minutes;
-    int infected_minutes;
+    int infectado_minutos <- 0;
     
-    bool sintomatico;
-    bool isolamento;
-    bool quarentena;
-    int isolamento_minutes;
+    bool em_cuidados <- false;
+    bool quarentena <- false;
+    bool hospitalizado <- false;
+    int minutos_em_quarentena <- 0;
+    int minutos_hospitalizado <- 0;
+    
+	bool esta_recuperado <- false;
+	bool esta_curado <- false;
+	bool esta_morto <- false;
+	bool esta_vivo <- true;
+	bool vivo_curado <- false;
 	
-	string objetivo_atual;
+    
+	point alvo;
+	rgb color_pessoas <- #green;
 	
     init {
     	
-		inativo <- true;
 		speed <- 3 #km/#h;
-		color_pessoas <- #green;
     	location <- t1_local + {1,0,0};
-    	
-    	if flip(prob_vacinado) {
-    		beta <- beta * protecao_vacina;
-    	}
-    	
-    	if flip(prob_sintomatico) {
-    		sintomatico <- true;
-    	}
+
+//		Espera até o restaurante abrir
+		inativo <- true;
+   
+   		beta <- flip(prob_vacinado) ? beta * protecao_vacina : beta;
+   		sintomatico <- flip(prob_sintomatico) ? true : false;
+   		assintomatico <- sintomatico ? false : true;
 		
     	if flip(prob_iniciar_infectado) {
-    		is_infected <- true;
+    		esta_infectado <- true;
     		sintomatico <- false;
-    		is_susceptible <- false;
+    		esta_suscetivel <- false;
     		color_pessoas <- #red;
     	}
     	
@@ -100,7 +98,7 @@ species pessoas skills:[moving] {
 //	Objetivo: posicionar a pessoa na porta do restaurante
 //*****************************************************************************
 
-	reflex chegar when: t1_status > 0 and !(isolamento){
+	reflex chegar when: t1_status > 0 and !(em_cuidados) {
 		
 		if alvo = nil and location != t1_local {
 			alvo <- t1_local;
@@ -352,66 +350,129 @@ species pessoas skills:[moving] {
 //	Objetivo: mudar o estado da pessoa para exposto
 //*****************************************************************************
 
-    int ngb_infected_number function: pessoas at_distance 1 #m count(each.is_infected);
+    int ngb_infected_number function: pessoas at_distance 1 #m count(each.esta_infectado);
 
-	reflex s_to_e when: is_susceptible and (time mod 60.0) = 0 and !(inativo) {
+	reflex s_to_e when: esta_suscetivel and (int(time) mod 60) = 0 and !(inativo) and !(esta_curado) {
 		if flip(1-(1-beta)^ngb_infected_number) {
-			is_susceptible <- false;
-			is_exposed <- true;
+			esta_suscetivel <- false;
+			esta_exposto <- true;
 			color_pessoas <- #yellow;
-			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
+//			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
 		}
 	}
 
-	reflex e_to_i when: is_exposed {
-		exposed_minutes <- exposed_minutes + 1;
-		if int(sigma/(exposed_minutes/(24*60))) = 1 {
-			if flip(prob_sintomatico) {
-				exposed_minutes <- 0;
-				is_exposed <- false;
-				is_infected <- true;
-				color_pessoas <- #red;	
+//*****************************************************************************
+//	Reflex exposto para infectado 
+//	Objetivo: mudar o estado da pessoa para exposto
+//*****************************************************************************
+
+	reflex e_to_i when: esta_exposto {
+		exposto_minutos <- exposto_minutos + 1;
+		if int(sigma/(exposto_minutos/(24*60))) = 1 {
+			exposto_minutos <- 0;
+			esta_exposto <- false;
+			if assintomatico {
+				esta_infectado <- true;
+				color_pessoas <- #red;
 			} else {
-				isolamento <- true;
-			}
-		}
-	}
-
-	reflex isolado when: isolamento {
-		isolamento_minutes <- isolamento_minutes + 1;
-		if int(dias_isolado/(isolamento_minutes/(24*60))) = 1 {
-
-			isolamento_minutes <- 0;
-
-			if flip(prob_quarentena) and !(quarentena) {
-				write "entrei em quartena";
-				quarentena <- true;
-				dias_isolado <- dias_quarentena;
-			} else {
-				isolamento <- false;
-				is_infected <- false;
-				is_susceptible <- true;
-				color_pessoas <- #green;
-			}
-
-//			Arruma quantidade de dias fixos de 20
-			if quarentena {
-				dias_isolado <- 20;
-				isolamento <- false;
-				is_infected <- false;
-				is_susceptible <- true;
-				color_pessoas <- #green;
+				em_cuidados <- true;
 			}
 		}
 	}
 	
-	reflex i_to_r when: is_infected {
-		infected_minutes <- infected_minutes + 1;
-		if int(gamma/(infected_minutes/(24*60))) = 1 {
-			infected_minutes <- 0;
-			is_infected <- false;
-			is_susceptible <- true;
+//*****************************************************************************
+//	Reflex infectado para tomando cuidados (quarentena/hospitalização) 
+//	Objetivo: gerenciar o tempo da quarentena/hospitalização, considerar morte
+//	após hospitalização, possibilidade de estar curado e da possibilidade das
+//	pessoas não respeitar os cuidados. 
+//*****************************************************************************
+
+	reflex i_to_cuidados when: em_cuidados {
+		
+		if flip(prob_respeitar_cuidados) {
+			if !(quarentena and hospitalizado) {
+				quarentena <- flip(prob_quarentena) ? true: false;
+				hospitalizado <- quarentena ? false : true;
+			}
+			
+			if quarentena {
+				minutos_em_quarentena <- minutos_em_quarentena + 1;
+				if int(dias_quarentena/(minutos_em_quarentena/(24*60))) = 1 {
+					minutos_em_quarentena <- 0;
+					quarentena <- false;
+					if !(flip(prob_hospitalizado_apos_quarentena)) {
+						em_cuidados <- false;
+						esta_recuperado <- true;
+						esta_curado <- flip(prob_curado_apos_cuidados) ? true : false;
+					} else {
+						hospitalizado <- true;
+					}
+				}
+			}
+			
+			if hospitalizado {
+				minutos_hospitalizado <- minutos_hospitalizado + 1;
+				if int(dias_hospitalizado/(minutos_hospitalizado/(24*60))) = 1 {
+					minutos_hospitalizado <- 0;
+					if !(flip(prob_morte_hosp)) {
+						quarentena <- false;
+						em_cuidados <- false;
+						esta_recuperado <- true;
+						esta_curado <- flip(prob_curado_apos_cuidados) ? true : false;
+					} else {
+						esta_recuperado <- true;
+						esta_vivo <- false;
+						esta_morto <- true;
+					}
+				}
+			}
+			
+		} else {
+			esta_infectado <- true;
+			em_cuidados <- false;
+		}
+	}
+	
+//*****************************************************************************
+//	Reflex infectado para recuperado
+//	Objetivo: gerencia o tempo que a pessoas está infectada e transiciona ela
+//	para recuperada, considerando a possibilidade de estar curada.
+//*****************************************************************************
+
+	reflex i_to_r when: esta_infectado {
+		infectado_minutos <- infectado_minutos + 1;
+		if int(gamma/(infectado_minutos/(24*60))) = 1 {
+			infectado_minutos <- 0;
+			esta_infectado <- false;
 			color_pessoas <- #green;
+			if !(flip(prob_curado_apos_infectado)) {
+				esta_suscetivel <- true;
+			} else {
+				esta_curado <- true;
+				esta_recuperado <- true;
+			}
+		}
+	}
+	
+//*****************************************************************************
+//	Reflex 
+//	Objetivo: 
+//	
+//*****************************************************************************
+
+	reflex r_to_s when: esta_recuperado {
+
+		if esta_curado {
+			
+		}
+
+		if esta_morto {
+			do die;
+		}
+		
+		if esta_vivo {
+			esta_suscetivel <- true;
+			esta_recuperado <- false;
 		}
 	}
 
