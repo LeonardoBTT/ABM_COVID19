@@ -23,7 +23,7 @@ experiment restaurante type: gui {
 			species pessoas aspect: base transparency: 0.3;
 		}
 		
-		display chart refresh: every(10#cycles) {
+		display chart refresh: every(20#cycles) {
 			chart "Situação" type: series background: #lightgray style: exploded {
 				data "suscetiveis" value: pessoas count (each.esta_suscetivel) color: #green;
 				data "expostos" value: pessoas count (each.esta_exposto) color: #yellow;

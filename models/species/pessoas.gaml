@@ -66,7 +66,6 @@ species pessoas skills:[moving] {
 	bool esta_morto <- false;
 	bool esta_vivo <- true;
 	bool vivo_curado <- false;
-	
     
 	point alvo;
 	rgb color_pessoas <- #green;
@@ -358,7 +357,7 @@ species pessoas skills:[moving] {
 
     int ngb_infected_number function: pessoas at_distance 1 #m count(each.esta_infectado);
 
-	reflex s_to_e when: esta_suscetivel and (int(time) mod 60) = 0 and !(inativo) and !(esta_curado) {
+	reflex s_to_e when: esta_suscetivel and !(inativo) and !(esta_curado) {
 		if flip(1-(1-beta)^ngb_infected_number) {
 			esta_suscetivel <- false;
 			esta_exposto <- true;

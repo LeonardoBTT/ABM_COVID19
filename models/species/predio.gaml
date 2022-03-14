@@ -43,13 +43,16 @@ species predio {
 		if current_date.hour = hora_inicio_cafe and current_date.minute = minuto_inicio_cafe {
 //			write "Hora do café";
 			disponivel <- true;
-			ask pessoas {
+			ask pessoas where (each.inativo=true) {
 				self.t1_status <- 3;
 			}
 		}
 		if current_date.hour = hora_fim_cafe and current_date.minute = minuto_fim_cafe {
 			disponivel <- false;
 //			write "Fim da hora do café";
+			ask pessoas where (each.inativo=true) {
+				self.t1_status <- 0;
+			}
 		}
 
 //		Almoço		
@@ -79,7 +82,7 @@ species predio {
 		}
 	}
 	
-	reflex permitir_entrada when: disponivel {
+	reflex permitir_entrada when: disponivel and every(2#cycle){
 		try {
 			ask one_of(pessoas where (each.location={10.67,19.29,0.0})){
 				if pessoas count (each.inativo=false) < 100 {
