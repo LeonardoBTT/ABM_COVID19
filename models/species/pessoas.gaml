@@ -206,6 +206,12 @@ species pessoas skills:[moving] {
 		}
 		
 		if location = alvo {
+//			Teste para descobrir se duas pessoas ocupam a mesma cadeira
+//			ask mesas where (each.location=alvo) {
+//				if self.cadeira_ocupada {
+//					write "Sentei em uma cadeira já ocupada!";
+//				}
+//			}
 			alvo <- nil;
 			do ocupar_cadeira;
 			t5_status <- 2;
@@ -367,6 +373,9 @@ species pessoas skills:[moving] {
 //*****************************************************************************
 
 	reflex e_to_i when: esta_exposto {
+		if name = "pessoas14" {
+//			write "Estou exposto a:" + int(exposto_minutos/(24)) + " dias";
+		}
 		exposto_minutos <- exposto_minutos + 1;
 		if int(sigma/(exposto_minutos/(24*60))) = 1 {
 			exposto_minutos <- 0;
@@ -444,13 +453,8 @@ species pessoas skills:[moving] {
 		if int(gamma/(infectado_minutos/(24*60))) = 1 {
 			infectado_minutos <- 0;
 			esta_infectado <- false;
+			esta_suscetivel <- true;
 			color_pessoas <- #green;
-			if !(flip(prob_curado_apos_infectado)) {
-				esta_suscetivel <- true;
-			} else {
-				esta_curado <- true;
-				esta_recuperado <- true;
-			}
 		}
 	}
 	
@@ -463,7 +467,7 @@ species pessoas skills:[moving] {
 	reflex r_to_s when: esta_recuperado {
 
 		if esta_curado {
-			
+			write "curado pela vacina";
 		}
 
 		if esta_morto {

@@ -25,7 +25,7 @@ global {
 	bool texturas <- false;
 
 //	Definindo variáveis que controlam o tempo do modelo
-	float step <- 1 #h;
+	float step <- 1 #s;
 	date starting_date <- date("2022-01-01 05:30:00");
 
 //	Definindo uma variável que será usada futuramente para que o agente ande sobre os caminhos
@@ -35,10 +35,12 @@ global {
 	float beta <- 0.025;
 	int sigma <- 5;
 	int gamma <- 7;
+	
 	float prob_vacinado;
 	float protecao_vacina <- 1.0;
+	
 	float prob_iniciar_infectado <- 0.1;
-	float prob_curado_apos_infectado <- 0.0;
+	
 	float prob_sintomatico <- 0.8;
 	float prob_quarentena <- 0.5;
 	float prob_respeitar_cuidados <- 1.0;
@@ -59,6 +61,6 @@ global {
 		create caminho from: shape_file_caminhos;
 		caminho_de_pedestres <- as_edge_graph(caminho);
 
-		create pessoas number: 100;		
+		create pessoas number: 500;		
 	}
 }
