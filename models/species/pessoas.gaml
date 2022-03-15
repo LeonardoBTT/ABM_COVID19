@@ -362,7 +362,7 @@ species pessoas skills:[moving] {
 			esta_suscetivel <- false;
 			esta_exposto <- true;
 			color_pessoas <- #yellow;
-//			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
+			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
 		}
 	}
 

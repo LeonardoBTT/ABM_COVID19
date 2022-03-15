@@ -25,13 +25,8 @@ global {
 	bool texturas <- false;
 
 //	Definindo variáveis que controlam o tempo do modelo
-<<<<<<< HEAD
 	float step <- 1 #mn;
 	date starting_date <- date("2022-01-01 00:00:00");
-=======
-	float step <- 1 #s;
-	date starting_date <- date("2022-01-01 05:30:00");
->>>>>>> 1c8f5f47a520f21b335451fd08de7ebc9f82997e
 
 //	Definindo uma variável que será usada futuramente para que o agente ande sobre os caminhos
 	graph caminho_de_pedestres;
@@ -43,14 +38,7 @@ global {
 	
 	float prob_vacinado;
 	float protecao_vacina <- 1.0;
-<<<<<<< HEAD
 	float prob_iniciar_infectado <- 0.03;
-	float prob_curado_apos_infectado <- 0.0;
-=======
-	
-	float prob_iniciar_infectado <- 0.1;
-	
->>>>>>> 1c8f5f47a520f21b335451fd08de7ebc9f82997e
 	float prob_sintomatico <- 0.8;
 	float prob_quarentena <- 0.5;
 	float prob_respeitar_cuidados <- 1.0;
@@ -72,7 +60,6 @@ global {
 		caminho_de_pedestres <- as_edge_graph(caminho);
 
 		create pessoas number: 500;		
-<<<<<<< HEAD
 	}
 	
 	int segundos_n;
@@ -86,7 +73,5 @@ global {
 	reflex iosjdad {
 //		write segundos_n;
 //		write time;
-=======
->>>>>>> 1c8f5f47a520f21b335451fd08de7ebc9f82997e
 	}
 }
