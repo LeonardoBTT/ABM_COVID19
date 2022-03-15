@@ -355,14 +355,15 @@ species pessoas skills:[moving] {
 //	Objetivo: mudar o estado da pessoa para exposto
 //*****************************************************************************
 
-    int ngb_infected_number function: pessoas at_distance 1 #m count(each.esta_infectado);
+    int ngb_infected_number function: pessoas at_distance distancia_infeccao count(each.esta_infectado);
 
 	reflex s_to_e when: esta_suscetivel and !(inativo) and !(esta_curado) {
 		if flip(1-(1-beta)^ngb_infected_number) {
 			esta_suscetivel <- false;
 			esta_exposto <- true;
 			color_pessoas <- #yellow;
-			save [self.name,self.location.x, self.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
+			geometry home_geom_CRS <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:3857");
+			save [self.name,home_geom_CRS.location.x,home_geom_CRS.location.y,time] to: "../outputs/transmissao.csv" type: "csv" rewrite: false;
 		}
 	}
 

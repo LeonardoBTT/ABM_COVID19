@@ -36,9 +36,11 @@ global {
 	int sigma <- 5;
 	int gamma <- 7;
 	
-	float prob_vacinado;
-	float protecao_vacina <- 1.0;
-	float prob_iniciar_infectado <- 0.03;
+	float distancia_infeccao <- 1 #m;
+	
+	float prob_vacinado <- 1.0;
+	float protecao_vacina <- 1.0; //0.80336;
+	float prob_iniciar_infectado <- 0.05; //3588/11080000; // média 7d infectados 15-05 no paraná / populução do paraná
 	float prob_sintomatico <- 0.8;
 	float prob_quarentena <- 0.5;
 	float prob_respeitar_cuidados <- 1.0;
