@@ -38,12 +38,12 @@ global {
 	
 	float distancia_infeccao <- 1 #m;
 	
-	float prob_vacinado <- 1.0;
-	float protecao_vacina <- 1.0; //0.80336;
-	float prob_iniciar_infectado <- 0.05; //3588/11080000; // média 7d infectados 15-05 no paraná / populução do paraná
-	float prob_sintomatico <- 0.8;
+	float prob_vacinado <- 0.9;
+	float protecao_vacina <- 0.80336;
+	float prob_iniciar_infectado <- 0.5; //3588/11080000 = 0.00032382671 // média 7d infectados 15-05 no paraná / populução do paraná
+	float prob_sintomatico <- 0.8; //importante
 	float prob_quarentena <- 0.5;
-	float prob_respeitar_cuidados <- 1.0;
+	float prob_respeitar_cuidados <- 0.8;
 	float prob_hospitalizado_apos_quarentena <- 0.0;
 	float prob_curado_apos_cuidados <- 0.0;
 	float prob_morte_hosp <- 0.0;
@@ -62,18 +62,5 @@ global {
 		caminho_de_pedestres <- as_edge_graph(caminho);
 
 		create pessoas number: 500;		
-	}
-	
-	int segundos_n;
-	
-//	reflex relogio {
-//		loop segundos from: 0 to: step {
-//			segundos_n <- segundos;
-//		} 
-//	}
-
-	reflex iosjdad {
-//		write segundos_n;
-//		write time;
 	}
 }

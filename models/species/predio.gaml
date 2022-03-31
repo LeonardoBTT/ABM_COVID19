@@ -38,6 +38,11 @@ species predio {
 	int hora_fim_jantar <- 19;
 	int minuto_fim_jantar <- 30;
 	
+//*****************************************************************************
+//	Reflex abrir e fechar
+//	Objetivo: abre o restaurante para a utilização das pessoas e faz o fechamento 
+//*****************************************************************************
+
 	reflex abrir_e_fechar {
 //		Café
 		if current_date.hour = hora_inicio_cafe and current_date.minute = minuto_inicio_cafe {
@@ -82,6 +87,11 @@ species predio {
 		}
 	}
 	
+//*****************************************************************************
+//	Reflex permitir a entrada das pessoas
+//	Objetivo: permite a entrada das pessoas no restaurante 
+//*****************************************************************************
+
 	reflex permitir_entrada when: disponivel and every(2#cycle){
 		try {
 			ask one_of(pessoas where (each.location={10.67,19.29,0.0})){
@@ -91,6 +101,11 @@ species predio {
 			}
 		}
 	}
+
+//*****************************************************************************
+//	Reflex personaliza o prédio
+//	Objetivo: personaliza cor e altura dos elementos 
+//*****************************************************************************
 	
 	action personalizar_predio {
 		

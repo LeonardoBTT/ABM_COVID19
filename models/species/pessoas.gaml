@@ -43,7 +43,6 @@ species pessoas skills:[moving] {
 	
 //	SEIR
 	bool esta_suscetivel <- true;
-	bool esta_vacinado;
 	
 	bool esta_exposto <- false;
     int exposto_minutos <- 0;
@@ -51,8 +50,6 @@ species pessoas skills:[moving] {
 	bool esta_infectado <- false;
     bool sintomatico;
     bool assintomatico;
-	point infectado_x;
-	point infectado_y;
     int infectado_minutos <- 0;
     
     bool em_cuidados <- false;
@@ -65,7 +62,6 @@ species pessoas skills:[moving] {
 	bool esta_curado <- false;
 	bool esta_morto <- false;
 	bool esta_vivo <- true;
-	bool vivo_curado <- false;
     
 	point alvo;
 	rgb color_pessoas <- #green;
@@ -88,8 +84,6 @@ species pessoas skills:[moving] {
     		esta_suscetivel <- false;
     		color_pessoas <- #red;
     	}
-    	
-//		location <- texturas ? (origem + {0,0,0.75}) : origem;
     }
 
 //*****************************************************************************
@@ -369,7 +363,7 @@ species pessoas skills:[moving] {
 
 //*****************************************************************************
 //	Reflex exposto para infectado 
-//	Objetivo: mudar o estado da pessoa para exposto
+//	Objetivo: mudar o estado da pessoa para infectado
 //*****************************************************************************
 
 	reflex e_to_i when: esta_exposto {
@@ -392,7 +386,7 @@ species pessoas skills:[moving] {
 //*****************************************************************************
 //	Reflex infectado para tomando cuidados (quarentena/hospitalização) 
 //	Objetivo: gerenciar o tempo da quarentena/hospitalização, considerar morte
-//	após hospitalização, possibilidade de estar curado e da possibilidade das
+//	após hospitalização, possibilidade de estar curado e da possibilidade de as
 //	pessoas não respeitar os cuidados. 
 //*****************************************************************************
 
@@ -444,7 +438,7 @@ species pessoas skills:[moving] {
 	
 //*****************************************************************************
 //	Reflex infectado para recuperado
-//	Objetivo: gerencia o tempo que a pessoas está infectada e transiciona ela
+//	Objetivo: gerencia o tempo que a pessoas está infectada e muda o estado dela
 //	para recuperada, considerando a possibilidade de estar curada.
 //*****************************************************************************
 
@@ -459,15 +453,15 @@ species pessoas skills:[moving] {
 	}
 	
 //*****************************************************************************
-//	Reflex 
-//	Objetivo: 
-//	
+//	Reflex recuperado para suscetivel
+//	Objetivo: muda o estado da pessoa para suscetivel se estiver viva,
+//	elimina o agente se tiver morto
 //*****************************************************************************
 
 	reflex r_to_s when: esta_recuperado {
 
 		if esta_curado {
-			write "curado pela vacina";
+//			write "curado pela vacina";
 		}
 
 		if esta_morto {
@@ -482,7 +476,7 @@ species pessoas skills:[moving] {
 
 //*****************************************************************************
 //	Move
-//	Objetivo: Realiza o movimento da pessoas quando ela tem um alvo
+//	Objetivo: Realiza o movimento das pessoas quando ela tem um alvo
 //*****************************************************************************
 	
 	reflex move when: alvo != nil {
@@ -490,7 +484,7 @@ species pessoas skills:[moving] {
 		do goto target:alvo on:caminho_de_pedestres;
 	
 	}
-	
+
 //*****************************************************************************
 //	Esperar
 //	Objetivo: a pessoa espera um determinado tempo quando chega no seu alvo 
@@ -502,6 +496,7 @@ species pessoas skills:[moving] {
 				sleep_time <- t1_minutos;
 			}
 			if sleep_time > -1 {
+				write sleep_time;
 				if sleep_time = 0 {
 					t1_status <- 1;
 					sleep_time <- sleep_time - 1;
