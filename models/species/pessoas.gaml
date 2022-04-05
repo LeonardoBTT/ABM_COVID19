@@ -65,6 +65,7 @@ species pessoas skills:[moving] {
     
 	point alvo;
 	rgb color_pessoas <- #green;
+	float beta_individual;
 	
     init {
     	
@@ -74,7 +75,8 @@ species pessoas skills:[moving] {
 //		Espera até o restaurante abrir
 		inativo <- true;
    
-   		beta <- flip(prob_vacinado) ? beta * protecao_vacina : beta;
+   		
+   		beta_individual <- flip(prob_vacinado) ? beta * protecao_vacina : beta;
    		sintomatico <- flip(prob_sintomatico) ? true : false;
    		assintomatico <- sintomatico ? false : true;
 		
@@ -350,9 +352,10 @@ species pessoas skills:[moving] {
 //*****************************************************************************
 
     int ngb_infected_number function: pessoas at_distance distancia_infeccao count(each.esta_infectado);
-
+	
+	
 	reflex s_to_e when: esta_suscetivel and !(inativo) and !(esta_curado) {
-		if flip(1-(1-beta)^ngb_infected_number) {
+		if flip(1-(1-beta_individual)^ngb_infected_number) {
 			esta_suscetivel <- false;
 			esta_exposto <- true;
 			color_pessoas <- #yellow;
@@ -460,6 +463,8 @@ species pessoas skills:[moving] {
 
 	reflex r_to_s when: esta_recuperado {
 
+		color_pessoas <- #green;
+		
 		if esta_curado {
 //			write "curado pela vacina";
 		}
