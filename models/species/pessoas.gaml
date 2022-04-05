@@ -76,7 +76,7 @@ species pessoas skills:[moving] {
 		inativo <- true;
    
    		
-   		beta_individual <- flip(prob_vacinado) ? beta * protecao_vacina : beta;
+   		beta_individual <- flip(prob_vacinado) ? beta * (1-protecao_vacina) : beta;
    		sintomatico <- flip(prob_sintomatico) ? true : false;
    		assintomatico <- sintomatico ? false : true;
 		
@@ -353,8 +353,12 @@ species pessoas skills:[moving] {
 
     int ngb_infected_number function: pessoas at_distance distancia_infeccao count(each.esta_infectado);
 	
-	
 	reflex s_to_e when: esta_suscetivel and !(inativo) and !(esta_curado) {
+		
+		if name = "pessoas0" {
+			write ngb_infected_number;	
+		}
+		
 		if flip(1-(1-beta_individual)^ngb_infected_number) {
 			esta_suscetivel <- false;
 			esta_exposto <- true;
