@@ -104,7 +104,6 @@ species pessoas skills:[moving] {
 		}
 		
 		if t1_status = 1 {
-			inativo <- false;
 			do escolher_atividade;
 		}
 	}
@@ -126,6 +125,7 @@ species pessoas skills:[moving] {
 		}
 		
 		if t2_status = 2 {
+			inativo <- false;
 			do esperar;
 		}
 		
@@ -351,15 +351,16 @@ species pessoas skills:[moving] {
 //	Objetivo: mudar o estado da pessoa para exposto
 //*****************************************************************************
 
-    int ngb_infected_number function: pessoas at_distance distancia_infeccao count(each.esta_infectado);
+//    int ngb_infected_number function: pessoas at_distance distancia_infeccao count(each.esta_infectado);
+	int ngb_infected_number <- 0;
 	
 	reflex s_to_e when: esta_suscetivel and !(inativo) and !(esta_curado) {
-		
-		if name = "pessoas0" {
-			write ngb_infected_number;	
+		if pessoas at_distance distancia_infeccao count(each.esta_infectado) > 0 {
+			ngb_infected_number <- 1;
 		}
 		
 		if flip(1-(1-beta_individual)^ngb_infected_number) {
+			ngb_infected_number <- 0;
 			esta_suscetivel <- false;
 			esta_exposto <- true;
 			color_pessoas <- #yellow;
