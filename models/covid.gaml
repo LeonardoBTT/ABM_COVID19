@@ -41,9 +41,9 @@ global {
 	float prob_vacinado <- 1.0;
 	float protecao_vacina <- 0.80336; //0.80336
 	float prob_iniciar_infectado <- 0.05; //3588/11080000 = 0.00032382671 // média 7d infectados 15-05 no paraná / populução do paraná
-	float prob_sintomatico <- 1.0; //importante
+	float prob_sintomatico <- 0.25; //importante
 	float prob_quarentena <- 1.0;
-	float prob_respeitar_cuidados <- 0.75;
+	float prob_respeitar_cuidados <- 0.0;
 	float prob_hospitalizado_apos_quarentena <- 0.0;
 	float prob_curado_apos_cuidados <- 0.0;
 	float prob_morte_hosp <- 0.0;
@@ -63,4 +63,8 @@ global {
 
 		create pessoas number: 409;		
 	}
+	
+	 reflex toto when: current_date.day = 1 and current_date.month = 2 {
+        do pause;
+    }
 }
