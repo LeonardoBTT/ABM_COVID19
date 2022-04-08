@@ -365,7 +365,7 @@ species pessoas skills:[moving] {
 			esta_exposto <- true;
 			color_pessoas <- #yellow;
 			geometry home_geom_CRS <- {self.location.x, self.location.y, self.location.z}  CRS_transform("EPSG:3857");
-			save [self.name,home_geom_CRS.location.x,home_geom_CRS.location.y,time] to: "../outputs/"+nome_arquivo_saida+".csv" type: "csv" rewrite: true;
+			save [self.name,home_geom_CRS.location.x,home_geom_CRS.location.y,time] to: "../outputs/"+nome_arquivo_saida+".csv" type: "csv" rewrite: false;
 		}
 	}
 
