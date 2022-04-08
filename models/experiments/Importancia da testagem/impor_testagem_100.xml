@@ -17,7 +17,7 @@
 		<parameter name="prob_morte_hosp" type="FLOAT" value="0.0"/>
 		
 		
-		<parameter name="nome_arquivo_saida" type="STRING" value="impor_vacinas_25"/>
+		<parameter name="nome_arquivo_saida" type="STRING" value="impor_testagem_100"/>
 		
 	</Parameters>
 	  <Outputs>
