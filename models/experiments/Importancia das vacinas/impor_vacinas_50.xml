@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Experiment_plan>
-	<Simulation id="2" sourcePath="C:/Users/Usuario/Documents/Pasta_Leonardo/gama_workspace/ABM_COVID19/models/experiments/restaurante.experiment" finalStep="44641" experiment="restaurante">
+	<Simulation id="2" sourcePath="../restaurante.experiment" finalStep="44641" experiment="restaurante">
 	<Parameters>
 
 		<parameter name="prob_vacinado" type="FLOAT" value="0.50"/>
