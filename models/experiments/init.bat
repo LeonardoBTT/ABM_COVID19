@@ -1,4 +1,4 @@
-cd "Importancia da testagem"
+cd Importancia da testagem
 start cmd /k gama-headless.bat impor_testagem_25.xml simulacoes/impor_testagem_25
 timeout /t 150
 start cmd /k gama-headless.bat impor_testagem_50.xml simulacoes/impor_testagem_50
@@ -43,7 +43,7 @@ timeout /t 150
 start cmd /k gama-headless.bat impor_normas_100.xml simulacoes/impor_normas_100 
 timeout /t 150
 
-cd ../Importancia de respeitar as normas sanitarias após um evento inesperado
+cd ../Importancia de respeitar as normas sanitarias apos um evento inesperado
 
 start cmd /k gama-headless.bat apos_evento_25.xml simulacoes/apos_evento_25
 timeout /t 150
