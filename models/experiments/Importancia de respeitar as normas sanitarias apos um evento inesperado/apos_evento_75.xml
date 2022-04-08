@@ -21,7 +21,7 @@
 		
 	</Parameters>
 	  <Outputs>
-	    <Output id="1" name="chart" framerate="44641" />
+	    <Output id="1" name="chart" framerate="44640" />
 	  </Outputs>
 	</Simulation>
 </Experiment_plan>

@@ -11,17 +11,17 @@
 		
 		<parameter name="prob_quarentena" type="FLOAT" value="1.0"/>
 		
-		<parameter name="prob_respeitar_cuidados" type="FLOAT" value="1.0"/>
+		<parameter name="prob_respeitar_cuidados" type="FLOAT" value="0.25"/>
 		<parameter name="prob_hospitalizado_apos_quarentena" type="FLOAT" value="0.0"/>
 		<parameter name="prob_curado_apos_cuidados" type="FLOAT" value="0.0"/>
 		<parameter name="prob_morte_hosp" type="FLOAT" value="0.0"/>
 		
 		
-		<parameter name="nome_arquivo_saida" type="STRING" value="apos_evento_100"/>
+		<parameter name="nome_arquivo_saida" type="STRING" value="apos_evento_25"/>
 		
 	</Parameters>
 	  <Outputs>
-	    <Output id="1" name="chart" framerate="44641" />
+	    <Output id="1" name="chart" framerate="44640" />
 	  </Outputs>
 	</Simulation>
 </Experiment_plan>
