@@ -3,7 +3,7 @@
 	<Simulation id="2" sourcePath="restaurante.experiment" finalStep="44641" experiment="restaurante">
 	<Parameters>
 
-		<parameter name="prob_vacinado" type="FLOAT" value="0.25"/>
+		<parameter name="prob_vacinado" type="FLOAT" value="1.0"/>
 		<parameter name="protecao_vacina" type="FLOAT" value="0.80336"/>
 		
 		<parameter name="prob_iniciar_infectado" type="FLOAT" value="0.05"/>
@@ -11,15 +11,17 @@
 		
 		<parameter name="prob_quarentena" type="FLOAT" value="1.0"/>
 		
-		<parameter name="prob_respeitar_cuidados" type="FLOAT" value="1.0"/>
+		<parameter name="prob_respeitar_cuidados" type="FLOAT" value="0.50"/>
 		<parameter name="prob_hospitalizado_apos_quarentena" type="FLOAT" value="0.0"/>
 		<parameter name="prob_curado_apos_cuidados" type="FLOAT" value="0.0"/>
 		<parameter name="prob_morte_hosp" type="FLOAT" value="0.0"/>
-
+		
+		
+		<parameter name="nome_arquivo_saida" type="STRING" value="impor_normas_50"/>
 		
 	</Parameters>
 	  <Outputs>
-	    <Output id="1" name="chart" framerate="10000" />
+	    <Output id="1" name="chart" framerate="44641" />
 	  </Outputs>
 	</Simulation>
 </Experiment_plan>

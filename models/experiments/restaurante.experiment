@@ -9,7 +9,33 @@ import "../experiment.experiment"
 
 experiment restaurante type: gui {
 	
-	parameter "Texturas ligadas: " var: texturas <- texturas;
+	parameter "Predio:" var: shape_file_predio category: "GIS data";
+	parameter "Mesas: " var: shape_file_mesas category: "GIS data";
+	parameter "Caminho: " var: shape_file_caminhos category: "GIS data";
+	
+	parameter "Dias de quarentena " var: dias_quarentena category: "Dias prestando cuidados";
+	parameter "Dias hospitalizado: " var: dias_hospitalizado category: "Dias prestando cuidados";
+	
+	parameter "Sigma: " var: sigma category: "SEIR";
+	parameter "Beta: " var: beta category: "SEIR";
+	parameter "Gamma: " var: gamma category: "SEIR";
+	
+	
+	parameter "Vacinados(%): " var: prob_vacinado category: "Parâmetros";
+	parameter "Proteção da vacina(%): " var: protecao_vacina category: "Parâmetros";
+	
+	parameter "Inicialmente infectados(%): " var: prob_iniciar_infectado category: "Parâmetros";
+	parameter "Sintomáticos(%): " var: prob_sintomatico category: "Parâmetros";
+	
+	//Os que não forem para quarentena, mas apresentarem sintomas, então irão diretamente para o hospital
+	parameter "Se infectados, pacela que fará quarentena(%): " var: prob_quarentena category: "Parâmetros";
+	
+	parameter "Respeitam os cuidados(%): " var: prob_respeitar_cuidados category: "Parâmetros";
+	parameter "Hospitalizados após a quarentena(%): " var: prob_hospitalizado_apos_quarentena category: "Parâmetros";
+	parameter "Curados após cuidados(%): " var: prob_curado_apos_cuidados category: "Parâmetros";
+	parameter "Morte após hospitalização(%): " var: prob_morte_hosp category: "Parâmetros";
+	
+	parameter "Arquivo de saída: " var: nome_arquivo_saida category: "Parâmetros";
 	
 	output {
 		
@@ -30,5 +56,11 @@ experiment restaurante type: gui {
 				data "infectados" value: pessoas count (each.esta_infectado) color: #red;
 			}
 		}
-	}
+	
+	monitor "Suscetiveis" value: pessoas count (each.esta_suscetivel);
+	monitor "Expostos" value: pessoas count (each.esta_exposto);
+	monitor "Infectados" value: pessoas count (each.esta_infectado);
+	monitor "Total de alunos" value: 409;
+		
+	}	
 }

@@ -15,11 +15,13 @@
 		<parameter name="prob_hospitalizado_apos_quarentena" type="FLOAT" value="0.0"/>
 		<parameter name="prob_curado_apos_cuidados" type="FLOAT" value="0.0"/>
 		<parameter name="prob_morte_hosp" type="FLOAT" value="0.0"/>
-
+		
+		
+		<parameter name="nome_arquivo_saida" type="STRING" value="impor_vacinas_25"/>
 		
 	</Parameters>
 	  <Outputs>
-	    <Output id="1" name="chart" framerate="10000" />
+	    <Output id="1" name="chart" framerate="44641" />
 	  </Outputs>
 	</Simulation>
 </Experiment_plan>
